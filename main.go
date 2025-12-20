@@ -1,4 +1,4 @@
-package todoapp
+package main
 
 import (
 	"fmt"
