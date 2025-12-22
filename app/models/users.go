@@ -25,7 +25,7 @@ func (u *User) CreateUser() (err error) {
 		email,
 		password,
 		created_at) values(?,?,?,?,?)`
-	Db.Exec(cmd,
+	_, err = Db.Exec(cmd,
 		createUUID,
 		u.Name,
 		u.Email,
