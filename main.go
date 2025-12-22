@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"todo_app/app/models"
 	_ "todo_app/config"
 )
 
@@ -18,4 +20,7 @@ func main() {
 	// log.Println(u)
 
 	// u.CreateUser()
+
+	u, _ := models.GetUser(1)
+	fmt.Println(u)
 }
