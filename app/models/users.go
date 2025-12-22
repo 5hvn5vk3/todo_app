@@ -20,13 +20,13 @@ type User struct {
 
 func (u *User) CreateUser() (err error) {
 	cmd := `insert into users(
-	    uuid,
-		name,
-		email,
-		password,
-		created_at) values(?,?,?,?,?)`
+	uuid,
+	name,
+	email,
+	password,
+	created_at) values(?,?,?,?,?)`
 	_, err = Db.Exec(cmd,
-		createUUID,
+		createUUID(),
 		u.Name,
 		u.Email,
 		Encrypt(u.Password),
@@ -60,4 +60,13 @@ func GetUser(id int) (user User, err error) {
 		&user.CreatedAt,
 	)
 	return user, err
+}
+
+func (u *User) UpdateUser() (err error) {
+	cmd := `update users set name = ?, email = ? where id = ?`
+	_, err = Db.Exec(cmd, u.Name, u.Email, u.ID)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return err
 }
