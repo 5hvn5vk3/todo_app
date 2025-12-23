@@ -33,4 +33,19 @@ func main() {
 	// 更新後のユーザーを取得
 	user, _ = models.GetUser(1)
 	log.Println("更新後のユーザー:", user)
+
+	// ユーザーを削除
+	err := user.DeleteUser()
+	if err != nil {
+		log.Fatalln("ユーザー削除失敗:", err)
+	}
+	log.Println("ユーザー削除完了")
+
+	// 削除後のユーザー取得を試みる
+	_, err = models.GetUser(1)
+	if err != nil {
+		log.Println("削除後のユーザー取得失敗（予期された動作）:", err)
+	} else {
+		log.Println("削除後のユーザーがまだ存在しています（予期しない動作）")
+	}
 }
