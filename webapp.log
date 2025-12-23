@@ -1,0 +1,2 @@
+2025/12/22 11:58:07 main.go:21: {0  testName test@example.com testPassword 0001-01-01 00:00:00 +0000 UTC}
+2025/12/22 11:58:07 users.go:35: sql: converting argument $1 type: unsupported type func() uuid.UUID, a func
