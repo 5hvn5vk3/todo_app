@@ -23,7 +23,7 @@ func siginup(w http.ResponseWriter, r *http.Request) {
 		user := models.User{
 			Name:     r.PostFormValue("name"),
 			Email:    r.PostFormValue("email"),
-			Password: r.PostFormValue("password"),
+			PassWord: r.PostFormValue("password"),
 		}
 		if err := user.CreateUser(); err != nil {
 			log.Println(err)
@@ -48,7 +48,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		http.Redirect(w, r, "/login", http.StatusFound) // 302
 	}
-	if user.Password == models.Encrypt(r.PostFormValue("password")) {
+	if user.PassWord == models.Encrypt(r.PostFormValue("password")) {
 		session, err := user.CreateSession()
 		if err != nil {
 			log.Println(err)
