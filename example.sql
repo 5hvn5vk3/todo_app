@@ -1,6 +1,6 @@
-drop table sessions;
-drop table users;
-drop table todos;
+drop table if exists sessions;
+drop table if exists todos;
+drop table if exists users;
  
 create table users (
   id         serial primary key,
