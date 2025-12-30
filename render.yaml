@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: todo-app
+    runtime: go
+    buildCommand: ./build.sh
+    startCommand: ./todo_app
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: GO_ENV
+        value: production
+    # PostgreSQLを使用する場合は、以下のようにデータベースを追加できます
+    # databases:
+    #   - name: todo-db
+    #     plan: starter
+
+# PostgreSQLデータベース(オプション)
+# databases:
+#   - name: todo-db
+#     databaseName: todo_app
+#     user: todo_user
+#     plan: starter

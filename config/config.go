@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 	"todo_app/utils"
 
 	"gopkg.in/go-ini/ini.v1"
@@ -27,8 +28,15 @@ func LoadConfig() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	// PORT環境変数を優先的に使用(Render対応)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = cfg.Section("web").Key("port").MustString("8080")
+	}
+
 	Config = ConfigList{
-		Port:      cfg.Section("web").Key("port").MustString("8080"),
+		Port:      port,
 		SQLDriver: cfg.Section("db").Key("driver").String(),
 		DbName:    cfg.Section("db").Key("name").String(),
 		LogFile:   cfg.Section("web").Key("logfile").String(),
