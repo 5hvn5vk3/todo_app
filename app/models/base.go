@@ -4,12 +4,9 @@ import (
 	"crypto/sha1"
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
-	"todo_app/config"
 
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 )
 
 var Db *sql.DB
@@ -17,14 +14,8 @@ var Db *sql.DB
 var err error
 
 func init() {
-
-	url := os.Getenv("DATABASE_URL")
-	connection, _ := pq.ParseURL(url)
-	connection = fmt.Sprintf("%s sslmode=require", connection)
-	Db, err = sql.Open(config.Config.SQLDriver, connection)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	dsn := os.Getenv("DATABASE_URL")
+	Db, err = sql.Open("postgres", dsn)
 }
 
 func createUUID() (uuidobj uuid.UUID) { // update: users.go から移動
