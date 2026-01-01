@@ -51,13 +51,15 @@ func users(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			generateHTML(w, nil, "layout", "public_navbar", "signup")
 		} else {
-			http.Redirect(w, r, "/todos", http.StatusFound)
+			http.Redirect(w, r, "/todos", http.StatusSeeOther)
 		}
 	case "POST":
 		// ユーザー作成
 		err := r.ParseForm()
 		if err != nil {
 			log.Println(err)
+			http.Error(w, "Bad Request", http.StatusBadRequest)
+			return
 		}
 		user := models.User{
 			Name:     r.PostFormValue("name"),
@@ -66,8 +68,11 @@ func users(w http.ResponseWriter, r *http.Request) {
 		}
 		if err := user.CreateUser(); err != nil {
 			log.Println(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
 		}
-		http.Redirect(w, r, "/", http.StatusFound)
+		// 201 Created + リダイレクト
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	default:
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}

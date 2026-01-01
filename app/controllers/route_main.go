@@ -17,29 +17,36 @@ func top(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		generateHTML(w, "Hello", "layout", "public_navbar", "top")
 	} else {
-		http.Redirect(w, r, "/todos", http.StatusFound)
+		http.Redirect(w, r, "/todos", http.StatusSeeOther)
 	}
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
 	sess, err := session(w, r)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusFound)
-	} else {
-		user, err := sess.GetUserBySession()
-		if err != nil {
-			log.Println(err)
-		}
-		todos, _ := user.GetTodosByUser()
-		user.Todos = todos
-		generateHTML(w, user, "layout", "private_navbar", "index")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
+
+	user, err := sess.GetUserBySession()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	todos, err := user.GetTodosByUser()
+	if err != nil {
+		log.Println(err)
+	}
+	user.Todos = todos
+	generateHTML(w, user, "layout", "private_navbar", "index")
 }
 
 func todoNew(w http.ResponseWriter, r *http.Request) {
 	_, err := session(w, r)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		generateHTML(w, nil, "layout", "private_navbar", "todo_new")
 	}
@@ -48,84 +55,117 @@ func todoNew(w http.ResponseWriter, r *http.Request) {
 func todoSave(w http.ResponseWriter, r *http.Request) {
 	sess, err := session(w, r)
 	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusFound)
-	} else {
-		err = r.ParseForm()
-		if err != nil {
-			log.Println(err)
-		}
-		user, err := sess.GetUserBySession()
-		if err != nil {
-			log.Println(err)
-		}
-		content := r.PostFormValue("content")
-		if err := user.CreateTodo(content); err != nil {
-			log.Println(err)
-		}
-
-		http.Redirect(w, r, "/todos", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
+
+	err = r.ParseForm()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	user, err := sess.GetUserBySession()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	content := r.PostFormValue("content")
+	if err := user.CreateTodo(content); err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/todos", http.StatusSeeOther)
 }
 
 func todoEdit(w http.ResponseWriter, r *http.Request, id int) {
 	sess, err := session(w, r)
 	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusFound)
-	} else {
-		_, err := sess.GetUserBySession()
-		if err != nil {
-			log.Println(err)
-		}
-		t, err := models.GetTodo(id)
-		if err != nil {
-			log.Println(err)
-		}
-		generateHTML(w, t, "layout", "private_navbar", "todo_edit")
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
+
+	_, err = sess.GetUserBySession()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	t, err := models.GetTodo(id)
+	if err != nil {
+		log.Println(err)
+		http.NotFound(w, r)
+		return
+	}
+	generateHTML(w, t, "layout", "private_navbar", "todo_edit")
 }
 
 func todoUpdate(w http.ResponseWriter, r *http.Request, id int) {
 	sess, err := session(w, r)
 	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusFound)
-	} else {
-		err := r.ParseForm()
-		if err != nil {
-			log.Println(err)
-		}
-		user, err := sess.GetUserBySession()
-		if err != nil {
-			log.Println(err)
-		}
-		content := r.PostFormValue("content")
-		t := &models.Todo{
-			ID:      id,
-			Content: content,
-			UserID:  user.ID,
-		}
-		if err := t.UpdateTodo(); err != nil {
-			log.Println(err)
-		}
-		http.Redirect(w, r, "/todos", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
+
+	err = r.ParseForm()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	user, err := sess.GetUserBySession()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	content := r.PostFormValue("content")
+	t := &models.Todo{
+		ID:      id,
+		Content: content,
+		UserID:  user.ID,
+	}
+	if err := t.UpdateTodo(); err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/todos", http.StatusSeeOther)
 }
 
 func todoDelete(w http.ResponseWriter, r *http.Request, id int) {
 	sess, err := session(w, r)
 	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusFound)
-	} else {
-		_, err := sess.GetUserBySession()
-		if err != nil {
-			log.Println(err)
-		}
-		t, err := models.GetTodo(id)
-		if err != nil {
-			log.Println(err)
-		}
-		if err := t.DeleteTodo(); err != nil {
-			log.Println(err)
-		}
-		http.Redirect(w, r, "/todos", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
+
+	_, err = sess.GetUserBySession()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	t, err := models.GetTodo(id)
+	if err != nil {
+		log.Println(err)
+		http.NotFound(w, r)
+		return
+	}
+
+	if err := t.DeleteTodo(); err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/todos", http.StatusSeeOther)
 }
