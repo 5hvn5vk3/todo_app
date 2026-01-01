@@ -7,6 +7,12 @@ import (
 )
 
 func top(w http.ResponseWriter, r *http.Request) {
+	// "/" のみを処理
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
 	_, err := session(w, r)
 	if err != nil {
 		generateHTML(w, "Hello", "layout", "public_navbar", "top")

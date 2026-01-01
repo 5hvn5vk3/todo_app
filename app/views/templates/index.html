@@ -6,8 +6,11 @@ UserName:{{.Name}}
 
 {{ range .Todos }}
 <div>{{ .Content }}</div>
-<p>[<a href="/todos/edit/{{.ID}}">Edit</a>]</p>
-<p>[<a href="/todos/delete/{{.ID}}">Delete</a>]</p>
+<p>[<a href="/todos/{{.ID}}">Edit</a>]</p>
+<form action="/todos/{{.ID}}" method="post" style="display:inline;">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;">[Delete]</button>
+</form>
 <hr>
 {{end}}
 {{end}}

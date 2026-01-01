@@ -6,7 +6,7 @@ import (
 	"todo_app/app/models"
 )
 
-func siginup(w http.ResponseWriter, r *http.Request) {
+func signup(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		_, err := session(w, r)

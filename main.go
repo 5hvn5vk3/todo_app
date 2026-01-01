@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"todo_app/app/controllers"
 	"todo_app/app/models"
 )
@@ -9,5 +10,8 @@ import (
 func main() {
 	fmt.Println(models.Db)
 
-	controllers.StartMainServer()
+	log.Println("Starting server on port:", "8080")
+	if err := controllers.StartMainServer(); err != nil {
+		log.Fatal(err)
+	}
 }
