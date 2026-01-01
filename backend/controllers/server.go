@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"backend/config"
+	"backend/models"
 	"fmt"
 	"html/template"
 	"net/http"
 	"regexp"
 	"strconv"
-	"todo_app/app/models"
-	"todo_app/config"
 )
 
 func generateHTML(w http.ResponseWriter, data any, filenames ...string) {

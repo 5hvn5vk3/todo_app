@@ -1,8 +1,8 @@
 package config
 
 import (
+	"backend/utils"
 	"log"
-	"todo_app/utils"
 
 	"gopkg.in/go-ini/ini.v1"
 )

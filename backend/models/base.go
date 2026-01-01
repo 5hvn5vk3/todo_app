@@ -1,10 +1,10 @@
 package models
 
 import (
+	"backend/config"
 	"database/sql"
 	"fmt"
 	"log"
-	"todo_app/config"
 
 	_ "github.com/mattn/go-sqlite3"
 )

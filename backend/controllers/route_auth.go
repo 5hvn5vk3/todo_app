@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"backend/models"
 	"log"
 	"net/http"
-	"todo_app/app/models"
 )
 
 func siginup(w http.ResponseWriter, r *http.Request) {

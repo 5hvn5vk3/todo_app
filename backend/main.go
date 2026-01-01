@@ -1,9 +1,9 @@
 package main
 
 import (
+	"backend/controllers"
+	"backend/models"
 	"fmt"
-	"todo_app/app/controllers"
-	"todo_app/app/models"
 )
 
 func main() {
