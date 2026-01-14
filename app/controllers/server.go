@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"todo_app/app/models"
@@ -167,5 +168,6 @@ func StartMainServer() error {
 	http.HandleFunc("/todos/", todosHandler)     // GET: 編集フォーム, PUT: 更新, DELETE: 削除 (/todos/:id)
 	http.HandleFunc("/todos", todosIndexHandler) // GET: 一覧, POST: 作成
 
-	return http.ListenAndServe(":"+config.Config.Port, nil)
+	port := os.Getenv("PORT")
+	return http.ListenAndServe(":"+port, nil)
 }
