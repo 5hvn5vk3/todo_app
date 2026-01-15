@@ -17,3 +17,56 @@
 [Render にデプロイしています。](https://todo-app-czkz.onrender.com)そのため恐縮ですが、起動に少々時間がかかるかもしれません。
 
 ---
+
+## アプリケーション設計
+
+### アーキテクチャ
+
+Go 言語による MVC パターンに基づいた Web アプリケーションで、以下の 3 層構造で構成されています：
+
+- **Models（モデル層）**: データベースとのやり取りとビジネスロジック
+- **Views（ビュー層）**: HTML テンプレートによる UI 表示
+- **Controllers（コントローラ層）**: ルーティングと HTTP リクエスト処理
+
+### ディレクトリ構造
+
+```
+todo_app/
+├── main.go                 # エントリーポイント
+├── go.mod                  # Go モジュール定義
+├── config.ini              # 設定ファイル
+├── webapp.sql              # データベーススキーマ
+├── app/
+│   ├── controllers/        # コントローラ層
+│   │   ├── server.go       # サーバー設定とミドルウェア
+│   │   ├── route_main.go   # メインルーティング（Todo CRUD）
+│   │   └── route_auth.go   # 認証ルーティング（ログイン/サインアップ）
+│   ├── models/             # モデル層
+│   │   ├── base.go         # データベース接続
+│   │   ├── users.go        # ユーザーモデル
+│   │   └── todo.go         # Todoモデル
+│   └── views/              # ビュー層
+│       ├── templates/      # HTMLテンプレート
+│       ├── css/            # スタイルシート
+│       └── js/             # JavaScriptファイル
+├── config/
+│   └── config.go           # 設定読み込み
+└── utils/
+    └── logging.go          # ロギング機能
+```
+
+### 技術スタック
+
+- **言語**: Go 1.x
+- **データベース**: SQLite3
+- **フロントエンド**: Bootstrap 5, jQuery
+- **テンプレートエンジン**: html/template
+- **認証**: セッションベース（Cookie）
+
+### 主な機能
+
+- ユーザー登録・ログイン・ログアウト
+- Todo の作成・閲覧・更新・削除（CRUD）
+- セッション管理によるアクセス制御
+
+---
