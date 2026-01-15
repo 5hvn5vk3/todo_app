@@ -58,9 +58,9 @@ todo_app/
 ├── webapp.sql              # データベーススキーマ
 ├── app/
 │   ├── controllers/        # コントローラ層
-│   │   ├── server.go       # サーバー設定とミドルウェア
-│   │   ├── route_main.go   # メインルーティング（Todo CRUD）
-│   │   └── route_auth.go   # 認証ルーティング（ログイン/サインアップ）
+│   │   ├── server.go       # サーバー起動とルーティング設定
+│   │   ├── route_main.go   # Todo CRUDの処理
+│   │   └── route_auth.go   # 認証関連の処理
 │   ├── models/             # モデル層
 │   │   ├── base.go         # データベース接続
 │   │   ├── users.go        # ユーザーモデル

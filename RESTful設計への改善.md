@@ -17,6 +17,8 @@
 ### 対象ファイル
 
 - `app/controllers/server.go` - ルーティング定義
+- `app/controllers/route_auth.go` - 認証関連のハンドラー
+- `app/controllers/route_main.go` - Todo 関連のハンドラー
 - `app/views/templates/*.html` - フォームの action 属性
 
 ### 変更前（動詞ベース URL）
@@ -62,7 +64,7 @@ DELETE /todos/:id       → Todo削除
 
 ### リダイレクトのステータスコード
 
-#### 対象ファイル: `app/controllers/route_auth.go`, `app/controllers/route_main.go`, `app/controllers/server.go`
+#### 対象ファイル: `app/controllers/route_auth.go`, `app/controllers/route_main.go`
 
 **変更前**：全てのリダイレクトで `302 Found` を使用
 
@@ -84,7 +86,7 @@ http.Redirect(w, r, "/todos", http.StatusSeeOther) // 303
 
 ### エラーハンドリングのステータスコード
 
-#### 対象ファイル: `app/controllers/route_auth.go`, `app/controllers/route_main.go`, `app/controllers/server.go`
+#### 対象ファイル: `app/controllers/route_auth.go`, `app/controllers/route_main.go`
 
 **変更前**：エラー時もログ出力のみで適切な HTTP ステータスを返していなかった
 
@@ -202,7 +204,7 @@ func StartMainServer() error {
 
 ### リソースごとのハンドラー実装
 
-#### `/users` - ユーザーリソース（`app/controllers/server.go`）
+#### `/users` - ユーザーリソース（`app/controllers/route_auth.go`）
 
 ```go
 func users(w http.ResponseWriter, r *http.Request) {
@@ -217,7 +219,7 @@ func users(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-#### `/sessions` - セッションリソース（`app/controllers/server.go`）
+#### `/sessions` - セッションリソース（`app/controllers/route_auth.go`）
 
 ```go
 func sessions(w http.ResponseWriter, r *http.Request) {
@@ -235,7 +237,7 @@ func sessions(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-#### `/todos` - Todo リストリソース（`app/controllers/server.go`）
+#### `/todos` - Todo リストリソース（`app/controllers/route_main.go`）
 
 ```go
 func todosIndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -256,7 +258,7 @@ func todosIndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-#### `/todos/:id` - 個別 Todo リソース（`app/controllers/server.go`）
+#### `/todos/:id` - 個別 Todo リソース（`app/controllers/route_main.go`）
 
 ```go
 func todosHandler(w http.ResponseWriter, r *http.Request) {
@@ -382,16 +384,16 @@ func main() {
 
 ## 変更されたファイル一覧
 
-| ファイル                                  | 変更内容                                                                |
-| ----------------------------------------- | ----------------------------------------------------------------------- |
-| `app/controllers/server.go`               | ルーティングの再設計、HTTP メソッドオーバーライド機能の実装             |
-| `app/controllers/route_auth.go`           | ステータスコード改善、エラーハンドリング強化、typo 修正                 |
-| `app/controllers/route_main.go`           | ステータスコード改善、エラーハンドリング強化、Early Return パターン適用 |
-| `app/views/templates/index.html`          | RESTful URL に対応、DELETE メソッド実装                                 |
-| `app/views/templates/login.html`          | `/sessions`エンドポイントに変更                                         |
-| `app/views/templates/signup.html`         | `/users`エンドポイントに変更                                            |
-| `app/views/templates/todo_edit.html`      | RESTful URL に対応、PUT メソッド実装                                    |
-| `app/views/templates/todo_new.html`       | RESTful URL に対応                                                      |
-| `app/views/templates/private_navbar.html` | DELETE メソッドでログアウト実装                                         |
-| `app/views/templates/public_navbar.html`  | サインアップリンクを`/users`エンドポイントに変更                        |
-| `main.go`                                 | ログ出力とエラーハンドリング追加                                        |
+| ファイル                                  | 変更内容                                                                                           |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `app/controllers/server.go`               | ルーティングの再設計、HTTP メソッドオーバーライド機能の実装                                        |
+| `app/controllers/route_auth.go`           | 認証関連ハンドラーの実装、ステータスコード改善、エラーハンドリング強化                             |
+| `app/controllers/route_main.go`           | Todo 関連ハンドラーの実装、ステータスコード改善、エラーハンドリング強化、Early Return パターン適用 |
+| `app/views/templates/index.html`          | RESTful URL に対応、DELETE メソッド実装                                                            |
+| `app/views/templates/login.html`          | `/sessions`エンドポイントに変更                                                                    |
+| `app/views/templates/signup.html`         | `/users`エンドポイントに変更                                                                       |
+| `app/views/templates/todo_edit.html`      | RESTful URL に対応、PUT メソッド実装                                                               |
+| `app/views/templates/todo_new.html`       | RESTful URL に対応                                                                                 |
+| `app/views/templates/private_navbar.html` | DELETE メソッドでログアウト実装                                                                    |
+| `app/views/templates/public_navbar.html`  | サインアップリンクを`/users`エンドポイントに変更                                                   |
+| `main.go`                                 | ログ出力とエラーハンドリング追加                                                                   |
