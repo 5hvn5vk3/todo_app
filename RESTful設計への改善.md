@@ -2,7 +2,7 @@
 
 ## 概要
 
-Udemy の講座を見ながら作成した Todo アプリケーションを、より RESTful な設計に準拠するようにリファクタリングしました。主な改善点は以下の通りです：
+[Udemy の講座](https://www.udemy.com/share/103TVa3@JcVxm1FpsGbhhZMFmgga_7FYkIvuEsPq0odEDP73o43qRc4NIgcXO02wTqP5wS5IRA==/)を見ながら作成した Todo アプリケーションを、より RESTful な設計に準拠するようにリファクタリングしました。主な改善点は以下の通りです：
 
 1. **動詞ベースの URL からリソース指向の URL へ移行**
 2. **適切な HTTP ステータスコードの使用**
