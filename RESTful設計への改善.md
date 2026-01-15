@@ -1,16 +1,8 @@
 # RESTful 設計への改善
 
-## コミット情報
-
-- **コミットハッシュ**: 48a34991e18faf5b20c026a57fe1a9c57e5418d7
-- **日付**: 2026 年 1 月 1 日
-- **コミットメッセージ**: refactor codes more restful
-
----
-
 ## 概要
 
-このコミットでは、Todo アプリケーションをより RESTful な設計に準拠するよう大幅にリファクタリングしました。主な改善点は以下の通りです：
+Todo アプリケーションをより RESTful な設計に準拠するようにリファクタリングしました。主な改善点は以下の通りです：
 
 1. **動詞ベースの URL からリソース指向の URL へ移行**
 2. **適切な HTTP ステータスコードの使用**
@@ -193,7 +185,6 @@ func StartMainServer() error {
 
     // Public routes
     http.HandleFunc("/", top)
-    http.HandleFunc("/signup", users) // 後方互換性のため残す
     http.HandleFunc("/login", login)
 
     // RESTful routes
@@ -204,7 +195,8 @@ func StartMainServer() error {
     http.HandleFunc("/todos/", todosHandler)     // GET: 編集フォーム, PUT: 更新, DELETE: 削除 (/todos/:id)
     http.HandleFunc("/todos", todosIndexHandler) // GET: 一覧, POST: 作成
 
-    return http.ListenAndServe(":"+config.Config.Port, nil)
+    port := os.Getenv("PORT")
+	return http.ListenAndServe(":"+port, nil)
 }
 ```
 
@@ -360,16 +352,6 @@ func todoSave(w http.ResponseWriter, r *http.Request) {
 
 ## 6. その他の改善
 
-### typo の修正（`app/controllers/route_auth.go`）
-
-```go
-// 変更前
-func siginup(w http.ResponseWriter, r *http.Request) { ... }
-
-// 変更後
-func signup(w http.ResponseWriter, r *http.Request) { ... }
-```
-
 ### トップページのルーティング改善（`app/controllers/route_main.go`）
 
 ```go
@@ -411,4 +393,5 @@ func main() {
 | `app/views/templates/todo_edit.html`      | RESTful URL に対応、PUT メソッド実装                                    |
 | `app/views/templates/todo_new.html`       | RESTful URL に対応                                                      |
 | `app/views/templates/private_navbar.html` | DELETE メソッドでログアウト実装                                         |
+| `app/views/templates/public_navbar.html`  | サインアップリンクを`/users`エンドポイントに変更                        |
 | `main.go`                                 | ログ出力とエラーハンドリング追加                                        |
