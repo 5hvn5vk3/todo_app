@@ -157,7 +157,6 @@ func StartMainServer() error {
 
 	// Public routes
 	http.HandleFunc("/", top)
-	http.HandleFunc("/signup", users) // GET: サインアップフォーム, POST: ユーザー作成
 	http.HandleFunc("/login", login)
 
 	// RESTful routes
