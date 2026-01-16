@@ -12,7 +12,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		generateHTML(w, nil, "layout", "public_navbar", "login")
 	} else {
-		http.Redirect(w, r, "/todos", http.StatusSeeOther)
+		http.Redirect(w, r, "/todos", http.StatusFound)
 	}
 }
 
@@ -25,7 +25,7 @@ func users(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			generateHTML(w, nil, "layout", "public_navbar", "signup")
 		} else {
-			http.Redirect(w, r, "/todos", http.StatusSeeOther)
+			http.Redirect(w, r, "/todos", http.StatusFound)
 		}
 	case "POST":
 		// ユーザー作成
