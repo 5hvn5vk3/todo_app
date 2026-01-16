@@ -4,9 +4,9 @@
 
 [Udemy の講座](https://www.udemy.com/share/103TVa3@JcVxm1FpsGbhhZMFmgga_7FYkIvuEsPq0odEDP73o43qRc4NIgcXO02wTqP5wS5IRA==/)を見ながら作成した Todo アプリケーションを、より RESTful な設計に準拠するようにリファクタリングしました。主な改善点は以下の通りです：
 
-1. **RESTful ルーティングへの移行（リソース指向 URL とハンドラー実装）**
-2. **HTTP メソッドオーバーライド機能の実装**
-3. **適切な HTTP ステータスコードの使用**
+1. [**RESTful ルーティングへの移行（リソース指向 URL とハンドラー実装）**](#1-restful-ルーティングへの移行)
+2. [**HTTP メソッドオーバーライド機能の実装**](#2-http-メソッドオーバーライド機能の実装)
+3. [**適切な HTTP ステータスコードの使用**](#3-http-ステータスコードの改善)
 
 ---
 
