@@ -5,9 +5,8 @@
 [Udemy の講座](https://www.udemy.com/share/103TVa3@JcVxm1FpsGbhhZMFmgga_7FYkIvuEsPq0odEDP73o43qRc4NIgcXO02wTqP5wS5IRA==/)を見ながら作成した Todo アプリケーションを、より RESTful な設計に準拠するようにリファクタリングしました。主な改善点は以下の通りです：
 
 1. **RESTful ルーティングへの移行（リソース指向 URL とハンドラー実装）**
-2. **適切な HTTP ステータスコードの使用**
-3. **HTTP メソッドオーバーライド機能の実装**
-4. **エラーハンドリングの強化**
+2. **HTTP メソッドオーバーライド機能の実装**
+3. **適切な HTTP ステータスコードの使用**
 
 ---
 
@@ -182,7 +181,59 @@ func todosHandler(w http.ResponseWriter, r *http.Request) {
 
 ---
 
-## 2. HTTP ステータスコードの改善
+## 2. HTTP メソッドオーバーライド機能の実装
+
+HTML フォームは `GET` と `POST` しかサポートしていないため、`PUT` と `DELETE` を実現するための機能を実装しました。
+
+### 実装内容
+
+#### 対象ファイル: `app/controllers/server.go`
+
+```go
+// HTTPメソッドを取得（_methodフィールドでのオーバーライドに対応）
+func getMethod(r *http.Request) string {
+    if r.Method == "POST" {
+        if method := r.FormValue("_method"); method != "" {
+            return method
+        }
+    }
+    return r.Method
+}
+```
+
+### 使用例（HTML テンプレート）
+
+#### DELETE（Todo 削除） - `app/views/templates/index.html`
+
+```html
+<form action="/todos/{{.ID}}" method="post" style="display:inline;">
+  <input type="hidden" name="_method" value="DELETE" />
+  <button type="submit">[Delete]</button>
+</form>
+```
+
+#### PUT（Todo 更新） - `app/views/templates/todo_edit.html`
+
+```html
+<form role="form" action="/todos/{{.ID}}" method="post">
+  <input type="hidden" name="_method" value="PUT" />
+  <textarea class="form-control" name="content">{{.Content}}</textarea>
+  <button type="submit">Update</button>
+</form>
+```
+
+#### DELETE（ログアウト） - `app/views/templates/private_navbar.html`
+
+```html
+<form action="/sessions" method="post" style="display:inline;">
+  <input type="hidden" name="_method" value="DELETE" />
+  <button type="submit">logout</button>
+</form>
+```
+
+---
+
+## 3. HTTP ステータスコードの改善
 
 ### リダイレクトのステータスコード
 
@@ -244,69 +295,19 @@ if err != nil {
 
 ---
 
-## 3. HTTP メソッドオーバーライド機能の実装
+## 4. その他の改善
 
-HTML フォームは `GET` と `POST` しかサポートしていないため、`PUT` と `DELETE` を実現するための機能を実装しました。
+### エラーハンドリングの強化
 
-### 実装内容
-
-#### 対象ファイル: `app/controllers/server.go`
-
-```go
-// HTTPメソッドを取得（_methodフィールドでのオーバーライドに対応）
-func getMethod(r *http.Request) string {
-    if r.Method == "POST" {
-        if method := r.FormValue("_method"); method != "" {
-            return method
-        }
-    }
-    return r.Method
-}
-```
-
-### 使用例（HTML テンプレート）
-
-#### DELETE（Todo 削除） - `app/views/templates/index.html`
-
-```html
-<form action="/todos/{{.ID}}" method="post" style="display:inline;">
-  <input type="hidden" name="_method" value="DELETE" />
-  <button type="submit">[Delete]</button>
-</form>
-```
-
-#### PUT（Todo 更新） - `app/views/templates/todo_edit.html`
-
-```html
-<form role="form" action="/todos/{{.ID}}" method="post">
-  <input type="hidden" name="_method" value="PUT" />
-  <textarea class="form-control" name="content">{{.Content}}</textarea>
-  <button type="submit">Update</button>
-</form>
-```
-
-#### DELETE（ログアウト） - `app/views/templates/private_navbar.html`
-
-```html
-<form action="/sessions" method="post" style="display:inline;">
-  <input type="hidden" name="_method" value="DELETE" />
-  <button type="submit">logout</button>
-</form>
-```
-
----
-
-## 4. エラーハンドリングの強化
-
-### 改善前の問題点
+#### 改善前の問題点
 
 - エラーが発生してもログ出力のみで処理を継続
 - クライアントに適切なエラーレスポンスを返していない
 - `else` ブロックの深いネスト
 
-### 改善後のエラーハンドリング
+#### 改善後のエラーハンドリング
 
-#### 例 1: todoSave 関数（`app/controllers/route_main.go`）
+**例: todoSave 関数（`app/controllers/route_main.go`）**
 
 ```go
 func todoSave(w http.ResponseWriter, r *http.Request) {
@@ -341,15 +342,11 @@ func todoSave(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-#### 改善ポイント
+**改善ポイント：**
 
 1. **Early Return パターン**：エラーが発生したら即座に return
 2. **適切なステータスコード**：エラーの種類に応じた HTTP ステータスを返す
 3. **ネストの削減**：`else` ブロックを排除し、コードの可読性を向上
-
----
-
-## 5. その他の改善
 
 ### トップページのルーティング改善（`app/controllers/route_main.go`）
 
