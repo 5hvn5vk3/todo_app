@@ -33,10 +33,10 @@
 ### 技術スタック
 
 - **言語**: Go 1.25.0
-- **データベース**: PostgreSQL（本番環境）/ SQLite3（開発環境）
-- **フロントエンド**: Bootstrap 5, jQuery 3.7.1
+- **データベース**: PostgreSQL(本番環境)/ SQLite3(開発環境)
+- **フロントエンド**: Bootstrap 4.5.3, jQuery 3.7.1
 - **テンプレートエンジン**: html/template
-- **認証**: セッションベース（Cookie）
+- **認証**: セッションベース(Cookie)
 - **デプロイ**: Render
 
 ### アーキテクチャ
