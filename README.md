@@ -1,12 +1,12 @@
 # Todo アプリケーション
 
-## 概要
-
-[Udemy の講座](https://www.udemy.com/share/103TVa3@JcVxm1FpsGbhhZMFmgga_7FYkIvuEsPq0odEDP73o43qRc4NIgcXO02wTqP5wS5IRA==/)を見ながら作成した Todo アプリケーションを、より RESTful な設計にリファクタリングしました。
-
 ## 簡易仕様書
 
 [簡易仕様書](https://github.com/5hvn5vk3/todo_app/blob/render-rest/%E7%B0%A1%E6%98%93%E4%BB%95%E6%A7%98%E6%9B%B8.md)
+
+## 概要
+
+[Udemy の講座](https://www.udemy.com/share/103TVa3@JcVxm1FpsGbhhZMFmgga_7FYkIvuEsPq0odEDP73o43qRc4NIgcXO02wTqP5wS5IRA==/)を見ながら作成した Todo アプリケーションを、より RESTful な設計にリファクタリングしました。
 
 ### 本アプリケーションの機能
 
